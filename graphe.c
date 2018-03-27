@@ -166,6 +166,15 @@ int degre_sortant_noeud(pgraphe_t g, pnoeud_t n) {
     Cette fonction retourne le nombre d'arcs sortants
     du noeud n dans le graphe g
   */
+  parc_t arc = n->liste_arcs;
+  int nb_arcs = 0;
+
+  while (arc != NULL) {
+    nb_arcs++;
+    arc = arc->arc_suivant;
+  }
+
+  return nb_arcs;
 }
 
 int degre_entrant_noeud(pgraphe_t g, pnoeud_t n) {
@@ -262,4 +271,7 @@ int main(int argc, char **argv) {
   printf("Nombre arc : %d\n", nombre_arcs(g));
 
   printf("Nombre sommet : %d\n", nombre_sommets(g));
+
+  printf("Degre sortant pour le noeud 2 : %d\n",
+         degre_sortant_noeud(g, g->noeud_suivant));
 }
