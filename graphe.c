@@ -188,6 +188,10 @@ int degre_maximal_graphe(pgraphe_t g) {
   /*
     Max des degres des noeuds du graphe g
   */
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
   int max = 0;
   int nb_arcs;
   parc_t arc;
@@ -292,4 +296,6 @@ int main(int argc, char **argv) {
 
   printf("Degre sortant pour le noeud 2 : %d\n",
          degre_sortant_noeud(g, g->noeud_suivant));
+
+  printf("Degre maximal graphe: %d\n", degre_maximal_graphe(g));
 }
