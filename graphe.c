@@ -182,6 +182,21 @@ int degre_entrant_noeud(pgraphe_t g, pnoeud_t n) {
     Cette fonction retourne le nombre d'arcs entrants
     dans le noeud n dans le graphe g
   */
+  parc_t arc;
+  int nb_arcs = 0;
+
+  while (g != NULL) {
+    arc = g->liste_arcs;
+    while (arc != NULL && arc->noeud != n) {
+      arc = arc->arc_suivant;
+    }
+    if (arc != NULL) {
+      nb_arcs++;
+    }
+    g = g->noeud_suivant;
+  }
+
+  return nb_arcs;
 }
 
 int degre_maximal_graphe(pgraphe_t g) {
@@ -274,4 +289,7 @@ int main(int argc, char **argv) {
 
   printf("Degre sortant pour le noeud 2 : %d\n",
          degre_sortant_noeud(g, g->noeud_suivant));
+
+  printf("Degre entrant pour le noeud 2 : %d\n",
+         degre_entrant_noeud(g, g->noeud_suivant));
 }
