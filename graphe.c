@@ -254,6 +254,26 @@ int independant(pgraphe_t g) {
 
 int complet(pgraphe_t g) {
   /* Toutes les paires de sommet du graphe sont jointes par un arc */
+  /* Chaque sommet peut accéder à tous les autres */
+
+  int sommet = nombre_sommets(g);
+  parc_t arc;
+  int nb_arc;
+  int estComplet = 1;
+
+  while (g != NULL && estComplet) {
+    arc = g->liste_arcs;
+    nb_arc = 0;
+    while (arc != NULL) {
+      nb_arc++;
+      arc = arc->arc_suivant;
+    }
+    if (nb_arc != sommet - 1) {
+      estComplet = 0;
+    }
+    g = g->noeud_suivant;
+  }
+  return estComplet;
 }
 
 int regulier(pgraphe_t g) {
@@ -327,12 +347,12 @@ int main(int argc, char **argv) {
   printf("Degre sortant pour le noeud 2 : %d\n",
          degre_sortant_noeud(g, g->noeud_suivant));
 
-<<<<<<< HEAD
   printf("Degre entrant pour le noeud 2 : %d\n",
          degre_entrant_noeud(g, g->noeud_suivant));
 
   printf("Degre minimal graphe: %d\n", degre_minimal_graphe(g));
-=======
+
   printf("Degre maximal graphe: %d\n", degre_maximal_graphe(g));
->>>>>>> b41f16c7090db9aa4aa3b3c472ffcc455eaa26dc
+
+  printf("Est complet: %d\n", complet(g));
 }
