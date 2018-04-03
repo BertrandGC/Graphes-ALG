@@ -4,6 +4,7 @@
   (Pas de contrainte sur le nombre de noeuds des  graphes)
 */
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -209,6 +210,23 @@ int degre_minimal_graphe(pgraphe_t g) {
   /*
     Min des degres des noeuds du graphe g
   */
+
+  int min = INT_MAX;
+  int nb_arc;
+  parc_t arc;
+
+  while (g != NULL) {
+    arc = g->liste_arcs;
+    nb_arc = 0;
+    while (arc != NULL) {
+      nb_arc++;
+      arc = arc->arc_suivant;
+    }
+    if (nb_arc < min) {
+      min = nb_arc;
+    }
+    g = g->noeud_suivant;
+  }
 }
 
 int independant(pgraphe_t g) {
@@ -292,4 +310,6 @@ int main(int argc, char **argv) {
 
   printf("Degre entrant pour le noeud 2 : %d\n",
          degre_entrant_noeud(g, g->noeud_suivant));
+
+  printf("Degre minimal graphe: %d\n", degre_minimal_graphe(g));
 }
