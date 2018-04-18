@@ -135,14 +135,15 @@ int nombre_arcs(pgraphe_t g) {
   */
   parc_t arc;
   int nb_arcs = 0;
+  pnoeud_t p = g;
 
-  while (g != NULL) {
-    arc = g->liste_arcs;
+  while (p != NULL) {
+    arc = p->liste_arcs;
     while (arc != NULL) {
       nb_arcs++;
       arc = arc->arc_suivant;
     }
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
 
   return nb_arcs;
@@ -152,11 +153,12 @@ int nombre_sommets(pgraphe_t g) {
   /*
      cette fonction renvoie le nombre de noeuds du graphe g
   */
+  pnoeud_t p = g;
   int nb_noeuds = 0;
 
-  while (g != NULL) {
+  while (p != NULL) {
     nb_noeuds++;
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
 
   return nb_noeuds;
@@ -167,6 +169,7 @@ int degre_sortant_noeud(pgraphe_t g, pnoeud_t n) {
     Cette fonction retourne le nombre d'arcs sortants
     du noeud n dans le graphe g
   */
+  pnoeud_t p = g;
   parc_t arc = n->liste_arcs;
   int nb_arcs = 0;
 
@@ -183,18 +186,19 @@ int degre_entrant_noeud(pgraphe_t g, pnoeud_t n) {
     Cette fonction retourne le nombre d'arcs entrants
     dans le noeud n dans le graphe g
   */
+  pnoeud_t p = g;
   parc_t arc;
   int nb_arcs = 0;
 
-  while (g != NULL) {
-    arc = g->liste_arcs;
+  while (p != NULL) {
+    arc = p->liste_arcs;
     while (arc != NULL && arc->noeud != n) {
       arc = arc->arc_suivant;
     }
     if (arc != NULL) {
       nb_arcs++;
     }
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
 
   return nb_arcs;
@@ -204,13 +208,13 @@ int degre_maximal_graphe(pgraphe_t g) {
   /*
     Max des degres des noeuds du graphe g
   */
-
+  pnoeud_t p = g;
   int max = 0;
   int nb_arcs;
   parc_t arc;
 
-  while (g != NULL) {
-    arc = g->liste_arcs;
+  while (p != NULL) {
+    arc = p->liste_arcs;
     nb_arcs = 0;
     while (arc != NULL) {
       nb_arcs++;
@@ -219,7 +223,7 @@ int degre_maximal_graphe(pgraphe_t g) {
     if (nb_arcs > max) {
       max = nb_arcs;
     }
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
 
   return max;
@@ -229,13 +233,13 @@ int degre_minimal_graphe(pgraphe_t g) {
   /*
     Min des degres des noeuds du graphe g
   */
-
+  pnoeud_t p = g;
   int min = INT_MAX;
   int nb_arc;
   parc_t arc;
 
-  while (g != NULL) {
-    arc = g->liste_arcs;
+  while (p != NULL) {
+    arc = p->liste_arcs;
     nb_arc = 0;
     while (arc != NULL) {
       nb_arc++;
@@ -244,7 +248,7 @@ int degre_minimal_graphe(pgraphe_t g) {
     if (nb_arc < min) {
       min = nb_arc;
     }
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
 }
 
@@ -256,13 +260,14 @@ int complet(pgraphe_t g) {
   /* Toutes les paires de sommet du graphe sont jointes par un arc */
   /* Chaque sommet peut accéder à tous les autres */
 
-  int sommet = nombre_sommets(g);
+  pnoeud_t p = g;
+  int sommet = nombre_sommets(p);
   parc_t arc;
   int nb_arc;
   int estComplet = 1;
 
-  while (g != NULL && estComplet) {
-    arc = g->liste_arcs;
+  while (p != NULL && estComplet) {
+    arc = p->liste_arcs;
     nb_arc = 0;
     while (arc != NULL) {
       nb_arc++;
@@ -271,7 +276,7 @@ int complet(pgraphe_t g) {
     if (nb_arc != sommet - 1) {
       estComplet = 0;
     }
-    g = g->noeud_suivant;
+    p = p->noeud_suivant;
   }
   return estComplet;
 }
@@ -282,6 +287,29 @@ int regulier(pgraphe_t g) {
      g est le ponteur vers le premier noeud du graphe
      renvoie 1 si le graphe est régulier, 0 sinon
   */
+  int nb_arc_reference;
+  int nb_arc;
+  parc_t arc;
+  int estRegulier = 1;
+  pnoeud_t p = g;
+
+  // Initialisation du nombre d'arc du premier noeuds
+  if (p != NULL) {
+    nb_arc_reference = degre_sortant_noeud(g, p);
+  }
+  // On avance au noeud suivant maintenant que l'on a notre reference
+  p = p->noeud_suivant;
+
+  while (p != NULL && estRegulier) {
+    nb_arc = degre_sortant_noeud(p, p);
+    if (nb_arc_reference != nb_arc) {
+      estRegulier = 0;
+    }
+    // On avance dans le parcours de notre graphe
+    p = p->noeud_suivant;
+  }
+
+  return estRegulier;
 }
 
 void afficher_graphe_profondeur(pgraphe_t g) {
@@ -355,4 +383,6 @@ int main(int argc, char **argv) {
   printf("Degre maximal graphe: %d\n", degre_maximal_graphe(g));
 
   printf("Est complet: %d\n", complet(g));
+
+  printf("Est régulier %d\n", regulier(g));
 }
